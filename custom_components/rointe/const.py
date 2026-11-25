@@ -33,9 +33,12 @@ PRESET_ROINTE_ICE = "ice"
 API_TYPE_AUTO = "auto"
 API_TYPE_ROINTE = "rointe"
 API_TYPE_NEXA = "nexa"
+API_TYPE_LITE = "lite"
+
 API_TYPE_OPTIONS = {
     API_TYPE_AUTO: "Auto (detect)",
     API_TYPE_ROINTE: "Rointe Connect",
+    API_TYPE_LITE: "Rointe Lite",
     API_TYPE_NEXA: "Nexa",
 }
 
