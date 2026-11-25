@@ -29,6 +29,7 @@ from .settings import (
     FIREBASE_DEVICES_PATH_BY_ID,
     FIREBASE_GLOBAL_SETTINGS_PATH,
     FIREBASE_INSTALLATIONS_PATH,
+    FIREBASE_LITE_INSTALLATIONS_PATH,
     NEXA_FIREBASE_APP_KEY,
     NEXA_FIREBASE_AUTH_URL,
     NEXA_FIREBASE_DEFAULT_URL,
@@ -54,6 +55,12 @@ class RointeAPI:
         self._stored_username: Optional[str] = username
         self._stored_password: Optional[str] = password
         self.api_type = (api_type or "auto").lower()
+
+        self.firebase_installations_path = (
+            FIREBASE_LITE_INSTALLATIONS_PATH
+            if self.api_type == "lite"
+            else FIREBASE_INSTALLATIONS_PATH
+        )
 
         self.refresh_token = None
         self.auth_token = None
@@ -240,7 +247,7 @@ class RointeAPI:
             return ApiResponse(False, None, f"Network error {e}")
 
         if response.status_code != 200:
-            if self.api_type == "rointe":
+            if self.api_type in ("rointe", "lite"):
                 if response.status_code == 400:
                     return ApiResponse(
                         False,
@@ -537,7 +544,7 @@ class RointeAPI:
             "equalTo": f'"{self.local_id}"',
         }
 
-        url = f"{self.firebase_base_url}{FIREBASE_INSTALLATIONS_PATH}"
+        url = f"{self.firebase_base_url}{self.firebase_installations_path}"
 
         try:
             response = requests.get(url, params=args)
@@ -618,7 +625,7 @@ class RointeAPI:
             "orderBy": '"userid"',
             "equalTo": f'"{self.local_id}"',
         }
-        url = f"{self.firebase_base_url}{FIREBASE_INSTALLATIONS_PATH}"
+        url = f"{self.firebase_base_url}{self.firebase_installations_path}"
 
         try:
             response = requests.get(url, params=args)
